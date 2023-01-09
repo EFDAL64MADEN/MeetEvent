@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rechercher un évènement{% endblock %}
+
+{% block body %}
+    <h2 class="titre-page">Rechercher un évènement</h2>
+    <div class="searchFormType">
+        {{ form_start(searchForm) }}
+            <div class="textType">
+                {{ form_row(searchForm.keyWord) }}
+            </div>
+            <div class="submitType">
+                {{ form_row(searchForm.Rechercher) }}
+            </div>
+        {{ form_end(searchForm) }}
+    </div>
+{% endblock %}

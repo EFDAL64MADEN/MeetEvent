@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if edit == true %}
+        Modifier l'évènement
+    {% else %}
+        Ajouter un évènement
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {% if edit == true %}
+        <h2 class="titre-page">Modifier l'évènement</h2>
+    {% else %}
+        <h2 class="titre-page">Ajouter un évènement</h2>
+    {% endif %}
+    
+    <div class="add-event">
+        {{ form_start(formAddEvent) }}
+            <div class="textType">
+                {{ form_row(formAddEvent.nameOfEvent) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.description) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.startEvent) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.endEvent) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.numberOfPlaces) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.address) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.zipCode) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.city) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.theme) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddEvent.pictures) }}
+            </div>
+            
+            {% if (edit == true) and (event.pictures|length != 0) %}
+                <div class="preview-bloc">
+                    <div class="previews">
+                    {% for picture in event.pictures %}
+                        <figure class="preview">
+                            <img src="{{ asset('/uploads/event_pictures/' ~ picture.url) }}" alt="Image évènement">
+                            <a href="{{ path('event_delete_picture', {'id' : picture.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ picture.id) }}">Supprimer</a>
+                        </figure>
+                    {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p class="nothing">Aucune image choisie</p>
+            {% endif %}
+            <div class="submitType">
+                {{ form_row(formAddEvent.submit) }}
+            </div>
+        {{ form_end(formAddEvent) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/eventPictures.js') }}"></script>
+{% endblock %}

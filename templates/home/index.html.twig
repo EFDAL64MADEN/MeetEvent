@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MeetEvent{% endblock %}
+
+{% block body %}
+    <div id="wrapper">
+        <section class="mid-page">
+            {% for message in app.flashes('sup') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            <h1 class="home-title">Bienvenue sur MeetEvent</h1>
+            <div class="middle">
+                <div class="home-description">
+                    <h2>Site de rencontres <strong>amicales</strong> via des évènements</h2>
+                    <p>Retrouvez une panoplie d'évènements pour rencontrer des personnes qui partagent la même passion que vous.</p>
+                    <p>Inscrivez-vous gratuitement pour participez aux <strong>évènements !</strong></p>
+                </div>
+                <div class="welcome">
+                    <p class="catch-phrase">Des évènements pour tous les goûts n'attendent que vous !</p>
+                    <div class="links">
+                        <a href="{{ path('app_login') }}" class="account sign-in">Connectez-vous</a>
+                        <a href="{{ path('app_register') }}" class="account sign-up">Inscrivez-vous</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="fonctions">
+            <div class="fonction free">
+                <figure>
+                    <img src="{{ asset('img/magasin-gratuit.png') }}" alt="Étiquette gratuit">
+                </figure>
+                <p>
+                    Site 100% gratuit, pas besoin d'argent pour se faire des amis
+                </p>
+            </div>
+            <div class="fonction chat">
+                <figure>
+                    <img src="{{ asset('img/chat-a-bulles.png') }}" alt="Bulle de conversation">
+                </figure>
+                <p>
+                    Utilisez le chat privé pour discuter avec les personnes que vous allez rencontrer
+                </p>
+            </div>
+            <div class="fonction search">
+                <figure>
+                    <img src="{{ asset('img/loupe.png') }}" alt="Loupe">
+                </figure>
+                <p>
+                    Recherchez des évènements via l'outil de recherche de mots-clés
+                </p>
+            </div>
+            <div class="fonction friends">
+                <figure>
+                    <img src="{{ asset('img/amis.png') }}" alt="Amis">
+                </figure>
+                <p>
+                    Faites-vous des amis qui partagent les mêmes passions que vous
+                </p>
+            </div>
+        </section>
+    </div>
+  
+{% endblock %}

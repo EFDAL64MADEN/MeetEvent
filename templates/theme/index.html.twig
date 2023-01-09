@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les thèmes{% endblock %}
+
+{% block body %}
+
+    <h2 class="titre-page">Tous les thèmes</h2>
+    
+    <div class="themes">
+    
+    {% for theme in themes %}
+
+        <div class="theme" style="background-color: {{ theme.color }}">
+            {% if is_granted('ROLE_ADMIN') %}
+            <h3><a href="{{ path('edit_theme', {'id' : theme.id}) }}">{{ theme.themeName }}</a></h3>
+            {% else %}
+            <h3>{{ theme.themeName }}</h3>
+            {% endif %}
+            <figure class="theme-logo">
+                <img src="{{ asset('uploads/theme_logo/' ~ theme.logo) }}" alt="Logo Thème">
+            </figure>
+            <a href="{{ path('details_theme', {'id' : theme.id}) }}" class="see-events">Voir évènements</a>
+            {% if is_granted('ROLE_ADMIN') %}
+            <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#exampleModal{{theme.id}}">❌</button>                 
+                    <!-- Modal -->
+            <div class="modal fade" id="exampleModal{{theme.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmez-vous la supression de : <br>{{theme.themeName}} ? </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ⚠️ La suppression d'un thème est définitive. Veuillez confirmer la suppression. 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-lg bg-secondary mt-2 " data-bs-dismiss="modal" >Annuler</button>
+                            <button type="button" class="btn btn-lg bg-secondary mt-2 "><a href="{{ path('delete_theme', {'id' : theme.id}) }}">Supprimer</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+
+    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="redirect">
+        <a href="{{ path('add_theme') }}" class="redirect-add">+ Ajouter un thème</a>
+    </div>
+    {% endif %}
+
+
+{% endblock %}

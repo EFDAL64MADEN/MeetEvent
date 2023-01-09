@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+    
+<h2 class="titre-page">Mes amis</h2>
+{% if app.user.followers|length == 0 %}
+<p>Vous n'avez pas encore de follower</p>
+{% else %}
+<div class="friends-list">
+    <table>
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Voir les évènements</th>
+                <th>Discuter</th>
+                <th>Retirer l'ami</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for friend in app.user.follows %}
+            <tr>
+                <td>{{ friend.nickname }}</td>
+                <td><a href="{{ path('see_events_of', {'id' : friend.id}) }}">👀</a></td>
+                <td><a href="{{ path('send_message') }}">Envoyer un message</a></td>
+                <td><a href="{{ path('app_unfollow', {'id' : friend.id}) }}">➖</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+<div class="explications">
+    <p>Partcipez à des évènements pour rencontrer de nouvelles personnes, et vous pourrez ensuite discuter avec eux, ou encore participer à leurs évènements !</p>
+</div>
+
+
+{% endblock %}

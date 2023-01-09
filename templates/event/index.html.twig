@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènements{% endblock %}
+
+{% block body %}
+
+    <h2 class="titre-page">Bienvenue {{ app.user.nickname }} !<br>Trouvez l'évènement qui vous correspond</h2>
+    {% for success in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    <div class="cartes">
+    {% for event in events %}
+        {% if (event.startEvent|date("U") > "now"|date("U")) and (event.numberOfPlaces > event.users|length) %}
+            <div class="carte" style="background-color: {{ event.theme.color }}">
+                <figure class="event-picture">
+                    <img src="{{ asset('uploads/theme_logo/' ~ event.theme.logo) }}" alt="Logo Thème">
+                </figure>
+                <div class="description">
+                    <h3>{{ event.nameOfEvent }}</h3>
+                    <p class="creator">Crée par : {{ event.user.nickname }}</p>
+                    <p>Date : {{ event.startEvent|date("d/m/Y") }} - Heure : {{ event.startEvent|date("G:i") }} à {{ event.endEvent|date("G:i") }}</p>
+                    <p>Ville : {{ event.city }} ({{ event.zipCode }})</p>
+                    <p>Thème : {{ event.theme }}</p>
+                    <p>Places (restantes) : {{ event.numberOfPlaces }} ({{ event.numberOfPlaces - event.users|length }})</p>
+                </div>
+                <a href="{{ path('details_event', {'id' : event.id}) }}" class="participate">Voir plus</a>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènements du thème {{ theme.themeName }}{% endblock %}
+
+{% block body %}
+    <h2 class="titre-page">Évènements du thème {{ theme.themeName }}</h2>
+    <div class="cartes">
+    {# S'il n'y a aucun évènement pour le thème #}
+    {% if eventsTheme|length == 0 %}
+        <p>Il n'y aucun évènement de prévu pour ce thème</p>
+    {# Sinon #}
+    {% else %}
+        {# Pour tous les évènements du thème #}
+        {% for event in eventsTheme %}
+            {# Si la date de l'évènement n'est pas passée et si l'évènement n'est pas rempli #}
+            {% if (event.startEvent|date("U") > "now"|date("U")) and (event.numberOfPlaces > event.users|length) %}
+            <div class="carte" style="background-color: {{ event.theme.color }}">
+                <figure class="event-picture">
+                    <img src="{{ asset('uploads/theme_logo/' ~ event.theme.logo) }}" alt="Logo Thème">
+                </figure>
+                <div class="description">
+                    <h3>{{ event.nameOfEvent }}</h3>
+                    <p class="creator">Crée par : {{ event.user.nickname }}</p>
+                    <p>Date : {{ event.startEvent|date("d/m/Y") }} - Heure : {{ event.startEvent|date("G:i") }} à {{ event.endEvent|date("G:i") }}</p>
+                    <p>Ville : {{ event.city }} ({{ event.zipCode }})</p>
+                    <p>Thème : {{ event.theme }}</p>
+                    <p>Places (restantes) : {{ event.numberOfPlaces }} ({{ event.numberOfPlaces - event.users|length }})</p>
+                </div>
+                <a href="{{ path('details_event', {'id' : event.id}) }}" class="participate">Voir plus</a>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    </div>
+{% endblock %}
+
+

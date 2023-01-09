@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event }}{% endblock %}
+
+{% block body %}
+
+    <h2 class="titre-page">Participer à l'évènement</h2>
+    {% for success in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <section class="bloc-details">
+        <div class="details" style="background-color: {{ event.theme.color }}">
+            <h3>{{ event }}</h3>
+            <p class="creator">Crée par : {{ event.user.nickname }}</p>
+            <p>Date : {{ event.startEvent|date("d/m/Y") }} - Heure : {{ event.startEvent|date("G:i") }} à {{ event.endEvent|date("G:i") }}</p>
+            {% if event in app.user.subscribedEvents %}
+            <p>Adresse complète : {{ event.address }}</p>
+            {% endif %}
+            <p>Ville : {{ event.city }} ({{ event.zipCode }})</p>
+            <p>Thème : {{ event.theme }}</p>
+            <p>Places (restantes) : {{ event.numberOfPlaces }} ({{ event.numberOfPlaces - event.users|length }})</p>
+            <div class="event-description">
+                <h4 class="titre-description">Description</h3>
+                <p>{{ event.description }}</p>
+            </div>
+            {% if app.user in event.users %}
+            <a href="{{ path('app_unsubscribe', {'event_id' : event.id, 'user_id' : app.user.id}) }}" class="join">Se désinscrire</a>
+            {% else %}
+            <a href="{{ path('app_participate', {'event_id' : event.id, 'user_id' : app.user.id}) }}" class="join">Participer</a>
+            {% endif %}
+            {% if (app.user.id == event.user.id or is_granted('ROLE_ADMIN')) %}
+            <div class="edit-delete">
+                <a href="{{ path('edit_event', {'id' : event.id}) }}" class="edit-event">Modifier</a>
+                <a href="{{ path('delete_event', {'id' : event.id}) }}" class="delete-event">Supprimer</a>
+            </div>
+            {% endif %}
+        </div>
+        {% if event.pictures|length > 0 %}
+        <div class="event-pictures">
+            {% for picture in event.pictures %}
+                <figure class="mySlides">
+                    <img src="{{ asset('uploads/event_pictures/' ~ picture.url) }}" alt="Image évènement">
+                </figure>
+            {% endfor %}
+            <button class="left" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="right" onclick="plusDivs(+1)">&#10095;</button>
+        </div>
+        {% else %}
+        <p class="event-pictures-none">Aucune image disponible pour cet évènement.</p>
+        {% endif %}
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+        
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+        
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = x.length} ;
+            for (i = 0; i < x.length; i++) {
+              x[i].style.display = "none";
+            }
+            x[slideIndex-1].style.display = "block";
+        }
+    </script>
+{% endblock %}

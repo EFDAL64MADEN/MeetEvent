@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if edit == true %}
+        Modifier un thème
+    {% elseif edit == false %}
+        Ajouter un thème
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {% if edit == true %}
+            
+        <h2 class="titre-page">Modifier un thème</h2>
+
+    {% elseif edit == false %}
+    
+        <h2 class="titre-page">Ajouter un thème</h2>
+
+    {% endif %}
+    
+    <div class="add-theme">
+        {{ form_start(formAddTheme) }}
+            <div class="textType">
+                {{ form_row(formAddTheme.themeName) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddTheme.logoFile) }}
+            </div>
+            <div class="textType">
+                {{ form_row(formAddTheme.color) }}
+            </div>
+            <div class="submitType">
+                {{ form_row(formAddTheme.submit) }}
+            </div>
+        {{ form_end(formAddTheme) }}
+    </div>
+
+{% endblock %}

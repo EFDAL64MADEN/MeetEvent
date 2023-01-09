@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<div class="account-wrapper">
+    <h2 class="titre-page">Mon compte</h2>
+    {% for message in app.flashes('message') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <div class="account-infos">
+        <h3>Mes informations</h3>
+        <div class="info-card">
+            <div class="infos">
+                <p><strong>Pseudo </strong>: {{ app.user.nickname }}</p>
+                <p><strong>Adresse mail </strong>: {{ app.user.email }}</p>
+                <p><strong>Date de naissance </strong>: {{ app.user.dateOfBirth|date("d/m/Y") }}</p>
+                {% if is_granted('ROLE_ADMIN') %}
+                <p><strong>Rôle </strong>: Administrateur</p>
+                {% endif %}
+            </div>
+            {% if app.user.profilePicture != null %}
+            <figure class="profile-picture">
+                <img src="{{ asset('uploads/profile_pictures/' ~ app.user.profilePicture) }}" alt="Photo de profil">
+            </figure>
+            {% else %}
+            <figure class="profile-picture">
+                <img src="{{ asset('img/profil_vide.jpg') }}" alt="Photo de profil">
+            </figure>
+            {% endif %}
+        </div>
+        <div class="edit-profile">
+            <a href="{{ path('edit_profile') }}" class="edit-account">Modifier</a>
+            <a href="{{ path('edit_password') }}" class="edit-account pass">Changer mot de passe</a>
+        </div>
+    </div>
+    <div class="account-infos">
+        <h3>Mes évènements</h3>
+        {% if app.user.events|length == 0 %}
+            <p>Vous n'avez créé aucun évènement</p>
+        {% else %}
+            <div class="my-events">
+                <table>
+                    <tbody>
+                    {% for event in app.user.events %}
+                    <tr>
+                    {% if event.startEvent|date("U") > "now"|date("U") %}
+                        <td><a href="{{ path('details_event', {'id' : event.id}) }}">{{ event.nameOfEvent }}</a></td>
+                    {% else %}
+                        <td><p>{{ event.nameOfEvent }} (terminé)</p></td>
+                    {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <div class="account-infos">
+        <h3>Mes participations</h3>
+        <div class="incomings">
+            <div class="incoming">
+            <span>Prochainement</span>
+            {% if app.user.subscribedEvents|length == 0 %}
+                <p>Vous n'avez aucun évènement de prévu</p>
+            {% else %}
+                <table>
+                    <tbody>
+                    {% for subscribedEvent in app.user.subscribedEvents %}
+                        {% if subscribedEvent.startEvent|date("U") > "now"|date("U") %}
+                        <tr>
+                            <td><a href="{{ path('details_event', {'id' : subscribedEvent.id}) }}">{{ subscribedEvent.nameOfEvent }}</a></td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            </div>
+            <div class="past-event">
+            <span>Passées</span>
+            {% if app.user.subscribedEvents|length == 0 %}
+                <p>Vous n'avez participé à aucun évènement</p>
+            {% else %}
+                <table>
+                    <tbody>
+                    {% for subscribedEvent in app.user.subscribedEvents %}
+                        {% if subscribedEvent.startEvent|date("U") < "now"|date("U") %}
+                        <tr>
+                            <td><a href="{{ path('see_past_event', {'id' : subscribedEvent.id}) }}">{{ subscribedEvent.nameOfEvent }}</a></td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            </div>    
+        </div>
+    </div>
+    <button type="button" class="delete-account" data-bs-toggle="modal" data-bs-target="#exampleModal{{app.user.id}}">Supprimer mon compte</button>                 
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{app.user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmez-vous la supression de <br>votre compte ? </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ⚠️ La suppression d'un compte est définitive. Veuillez confirmer la suppression. 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg bg-secondary mt-2 " data-bs-dismiss="modal" >Annuler</button>
+                    <button type="button" class="btn btn-lg bg-secondary mt-2 "><a href="{{ path('delete_account', {'id' : app.user.id}) }}">Supprimer</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

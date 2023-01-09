@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Modifier profil
+{% endblock %}
+
+{% block body %}
+
+    <h2 class="titre-page">Modifier votre profil</h2>
+
+    <div class="edit-profile">
+        {{ form_start(formEditProfile) }}
+            {{ form_row(formEditProfile.email) }}
+            {{ form_row(formEditProfile.nickname) }}
+            {{ form_row(formEditProfile.profilePicture) }}
+            <div class="submitType">
+                {{ form_row(formEditProfile.submit) }}
+            </div>
+        {{ form_end(formEditProfile) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/eventPictures.js') }}"></script>
+{% endblock %}

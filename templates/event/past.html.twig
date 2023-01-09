@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event }}{% endblock %}
+
+{% block body %}
+
+    <h2 class="titre-page">Retrouvez les personnes qui étaient également présentes<br>à l'évènement {{ event }}</h2>
+    {% for message in app.flashes('message') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Suivre</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in event.users %}
+            {% if (user.id != app.user.id) and (user not in app.user.follows) %}
+            <tr>
+                <td>{{ user.nickname }}</td>
+                <td><a href="{{ path('app_follow', {'id' : user.id}) }}">➕</a></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="comments-title">Commentaires</h3>
+    <ul id="comments-list" class="comments-list">
+		<li>
+        {% for comment in event.comments %}
+	    	<div class="comment-main-level">
+	    		{% if comment.user.profilePicture != null %}
+                <figure class="comment-avatar">
+                    <img src="{{ asset('uploads/profile_pictures/' ~ comment.user.profilePicture) }}" alt="Photo de profil">
+                </figure>
+                {% else %}
+                <figure class="comment-avatar">
+                    <img src="{{ asset('img/profil_vide.jpg') }}" alt="Photo de profil">
+                </figure>
+                {% endif %}
+	    		<div class="comment-box">
+	    			<div class="comment-head">
+	    				<h6 class="comment-name">{{ comment.user.nickname }}</h6>
+	    			</div>
+	    			<div class="comment-content">
+	    				{{ comment.content }}
+	    			</div>
+	    		</div>
+	    	</div>
+	    {% endfor %}
+        </li>
+	</ul>
+    <h3 class="comments-title">Ajouter un commentaire</h3>
+    {{ form_start(formComment) }}
+        <div class="textType">
+            {{ form_row(formComment.content) }}
+        </div>
+        <div class="submitType">
+            {{ form_row(formComment.Poster) }}
+        </div>
+    {{ form_end(formComment) }}
+
+{% endblock %}

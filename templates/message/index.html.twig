@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie{% endblock %}
+
+{% block body %}
+    <h2 class="titre-page">Messagerie</h2>
+    {% for sent in app.flashes('sent') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ sent }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <section class="container">
+        <div class="row">
+            <div class="col">
+                <p>Messages reçus : {{ app.user.received|length }}</p>
+                <p>Messages envoyés : {{ app.user.sent|length }}</p>
+                <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    Tous les dossiers
+                </a>
+                <a href="{{ path('send_message') }}" class="btn btn-primary">Envoyer un message</a>
+            </div>
+        </div>
+    </section>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title" id="offcanvasExampleLabel">Dossiers</h3>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group">
+                <a href="{{ path('app_message') }}" class="list-group-item list-group-item-action active">Accueil</a>
+            </div>
+            <div class="list-group">
+                <a href="{{ path('app_received') }}" class="list-group-item list-group-item-action">Reçus</a>
+            </div>
+            <div class="list-group">
+                <a href="{{ path('app_sent') }}" class="list-group-item list-group-item-action">Envoyés</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
